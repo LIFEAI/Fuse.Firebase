@@ -103,13 +103,13 @@ namespace Firebase.Authentication.JS
         static void OnUser()
         {
             var isSignedIn = GetSignedIn();
-            _onSignInChanged.RaiseAsync(isSignedIn);
+            _onSignInChanged.RaiseAsync(_onSignInChanged.Context.ThreadWorker, isSignedIn);
             _instance.Emit("signedInStateChanged", isSignedIn);
         }
 
         static void OnError(int errorCode, string message)
         {
-            _onError.RaiseAsync(message, errorCode);
+            _onError.RaiseAsync(_onError.Context.ThreadWorker, message, errorCode);
             _instance.Emit("error", message, errorCode);
         }
 
