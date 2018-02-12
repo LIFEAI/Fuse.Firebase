@@ -35,12 +35,14 @@ namespace Firebase.Authentication.Facebook.JS
 
         static void Auth(string token)
         {
-            _onAuth.RaiseAsync(token);
+            _onAuth.RaiseAsync(_onAuth.Context.ThreadWorker, token);
+            //_onAuth.RaiseAsync(token);
         }
 
         static void OnFailed(string err)
         {
-            _onError.RaiseAsync(err);
+            _onError.RaiseAsync(_onError.Context.ThreadWorker, err);
+            //_onError.RaiseAsync(err);
         }
 
         object DoFacebookLogin(Context context, object[] args)
