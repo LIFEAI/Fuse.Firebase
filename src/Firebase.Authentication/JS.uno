@@ -103,8 +103,6 @@ namespace Firebase.Authentication.JS
         static void OnUser()
         {
             var isSignedIn = GetSignedIn();
-            _onSignInChanged.RaiseAsync(_onSignInChanged.Context.ThreadWorker, isSignedIn);
-            //_onSignInChanged.RaiseAsync(isSignedIn);
             _instance.Emit("signedInStateChanged", isSignedIn);
         }
 
