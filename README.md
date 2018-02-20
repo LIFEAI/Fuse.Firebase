@@ -285,6 +285,7 @@ CameraRoll.getImage()
 }, function(error) {
     // Will be called if the user aborted the selection or if an error occurred.
     console.log('error ' + error);
+```
 
 ### Simple Storage
 * For now, this uploads a picture to FirebaseStorage and returns the URL to access it. Part of this code was written by [Bolav](https://github.com/bolav).
