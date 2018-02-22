@@ -109,11 +109,9 @@ namespace Firebase.Authentication.JS
         static void OnError(int errorCode, string message)
         {
             //_onError.RaiseAsync(message, errorCode);
-            _onError.RaiseAsync(_onError.Context.ThreadWorker, errorCode);
+            _onError.RaiseAsync(_onError.Context.ThreadWorker, message, errorCode);
             _instance.Emit("error", message, errorCode);
         }
-
-
 
         // functions
         static Future<string> GetToken(object[] arg)
