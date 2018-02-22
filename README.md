@@ -72,6 +72,29 @@ firebaseDb.read(path)
             });
 ```
 
+### Read Data with Query
+
+Sometimes you need to search for a certain value in an object, instead or iterating in the client
+use this implementation to let the Firebase do the query for you.
+
+The following example will give you all the objects where the key name is equal to Luis Rodriguez,
+great for searching when you do not know the key and when you use Push to save data.
+
+```JavaScript
+// firebaseDb.readByQueryEqualToValue(path,key,value) <Promise>
+
+var firebaseDb = require("Firebase/Database");
+firebaseDb.readByQueryEqualToValue("users","name","Luis Rodriguez")
+            .then(function (json) {
+                // here json is a JSON string
+                console.log(json);
+                var user = JSON.parse(json);
+            })
+            .catch(function (reason) {
+                console.log('Unable to read -> ' +reason);
+            });
+```
+
 ### Listen for data event
 
 * this event is fired when you change particular object.
