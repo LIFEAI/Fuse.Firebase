@@ -78,21 +78,21 @@ namespace Firebase.Database.JS
 
             if defined(iOS)
             {
-                return new ReadEqualTo(
+                return new ReadByQueryEqualToValue(
                     path, key,
                     JSON.ObjCObject.FromJSON(JSON.ScriptingValue.ToJSON(val))
                 );
             }
             else if defined(Android)
             {
-                return new ReadEqualTo(
+                return new ReadByQueryEqualToValue(
                     path, key,
                     JSON.JavaObject.FromJSON(JSON.ScriptingValue.ToJSON(val))
                 );
             }
             else
             {
-                return new ReadEqualTo(path,key,val);
+                return new ReadByQueryEqualToValue(path,key,val);
             }
         }
 
