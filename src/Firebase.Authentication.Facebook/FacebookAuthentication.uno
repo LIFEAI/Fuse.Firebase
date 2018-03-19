@@ -120,12 +120,13 @@ namespace Firebase.Authentication.Facebook.JS
         @{
             final AccessToken token = (AccessToken)result;
             AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-            @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(token.getToken())};
             FirebaseAuth.getInstance().signInWithCredential(credential)
                 .addOnCompleteListener(com.fuse.Activity.getRootActivity(), new OnCompleteListener<AuthResult>() {
                         public void onComplete(Task<AuthResult> task) {
-                            if (task.isSuccessful())
+                            if (task.isSuccessful()) {
+                                @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(token.getToken())};
                                 @{OnSuccess(string):Call("Success")};
+                            }
                             else
                                 @{OnFailure(string):Call("Authentication against Firebase failed")};
                         }});
@@ -143,7 +144,6 @@ namespace Firebase.Authentication.Facebook.JS
                 return;
             }
         
-        	@{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(tokenStr)};
             FIRAuthCredential* credential = [FIRFacebookAuthProvider credentialWithAccessToken:tokenStr];
 
                 // auth againsts firebase
@@ -151,8 +151,10 @@ namespace Firebase.Authentication.Facebook.JS
                 completion:^(FIRUser* fuser, NSError* ferror) {
                     if (ferror)
                         @{OnFailure(string):Call(@"Authentication against Firebase failed")};
-                    else
-                        @{OnSuccess(string):Call(@"success")};
+                    else {
+                         @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(tokenStr)};
+                         @{OnSuccess(string):Call(@"success")};
+                     }
                 }];
         @}
 
