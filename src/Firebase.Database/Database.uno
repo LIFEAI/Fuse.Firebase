@@ -96,8 +96,12 @@ namespace Firebase.Database
                     if (dataSnapshot.getValue() == null) {
                         return;
                     }
-                    JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
-                    f.run(path,json.toString());
+                    try {
+                        JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
+                        f.run(path,json.toString());
+                    } catch (Throwable t) {
+                        Log.e("Error ", "Could not Parse JSON: \"" + dataSnapshot.getValue() + "\"");
+                    }
                 }
 
                 @Override
@@ -161,8 +165,12 @@ namespace Firebase.Database
                     if (dataSnapshot.getValue() == null) {
                         return;
                     }
-                    JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
-                    f.run(path,json.toString());
+                    try {
+                        JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
+                        f.run(path,json.toString());
+                    } catch (Throwable t) {
+                        Log.e("Error ", "Could not Parse JSON: \"" + dataSnapshot.getValue() + "\"");
+                    }
                 }
 
                 @Override
@@ -216,8 +224,12 @@ namespace Firebase.Database
                     if (dataSnapshot.getValue() == null) {
                         return;
                     }
-                    JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
-                    f.run(path,json.toString());
+                    try {
+                        JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
+                        f.run(path,json.toString());
+                    } catch (Throwable t) {
+                        Log.e("Error ", "Could not Parse JSON: \"" + dataSnapshot.getValue() + "\"");
+                    }
                 }
 
                 @Override
@@ -282,8 +294,12 @@ namespace Firebase.Database
                     if (dataSnapshot.getValue() == null) {
                         return;
                     }
-                    JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
-                    f.run(path,json.toString());
+                    try {
+                        JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
+                        f.run(path,json.toString());
+                    } catch (Throwable t) {
+                        Log.e("Error ", "Could not Parse JSON: \"" + dataSnapshot.getValue() + "\"");
+                    }
                 }
 
                 @Override
@@ -348,8 +364,12 @@ namespace Firebase.Database
                     if (dataSnapshot.getValue() == null) {
                         return;
                     }
-                    JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
-                    f.run(path,json.toString());
+                    try {
+                        JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
+                        f.run(path,json.toString());
+                    } catch (Throwable t) {
+                        Log.e("Error ", "Could not Parse JSON: \"" + dataSnapshot.getValue() + "\"");
+                    }
                 }
 
                 @Override
@@ -407,8 +427,12 @@ namespace Firebase.Database
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
-                    f.run(path,json.toString());
+                    try {
+                        JSONObject json = new JSONObject((Map)dataSnapshot.getValue());
+                        f.run(path,json.toString());
+                    } catch (Throwable t) {
+                        Log.e("Error ", "Could not Parse JSON: \"" + dataSnapshot.getValue() + "\"");
+                    }
                 }
 
                 @Override
