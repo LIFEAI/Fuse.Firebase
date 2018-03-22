@@ -7,8 +7,6 @@
 
 
 - (void)messaging:(FIRMessaging *)messaging didReceiveRegistrationToken:(NSString *)fcmToken {
-    NSLog(@"FCM registration token: %@", fcmToken);
-
     @{Firebase.Notifications.NotificationModule.OnRegistrationSucceedediOS(string):Call(fcmToken)};
 }
 
