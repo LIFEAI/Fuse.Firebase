@@ -76,9 +76,6 @@ namespace Firebase.Database.JS
             var key = args[1].ToString();
             var val = args[2];
 
-            debug_log "ReadByQueryEqualToValue";
-            debug_log(path);
-
             if defined(iOS)
             {
                 return new ReadByQueryEqualToValue(
@@ -147,9 +144,6 @@ namespace Firebase.Database.JS
             }
             else
             {
-                debug_log("Save: Unimplemented Javascript type");
-                debug_log arg;
-                debug_log arg.GetType();
                 throw new Exception("Save: Unimplemented Javascript type");
             }
         }
@@ -274,7 +268,6 @@ namespace Firebase.Database.JS
 
         object Listen(Fuse.Scripting.Context context, object[] args)
         {
-            debug_log "listen";
             var path = args[0].ToString();
             DatabaseService.Listen(path, ListenCallback);
             return null;
@@ -282,7 +275,6 @@ namespace Firebase.Database.JS
 
         object ListenForChildAdded(Fuse.Scripting.Context context, object[] args)
         {
-            debug_log "ListenForChildAdded";
             var path = args[0].ToString();
             int count = Marshal.ToInt(args[1]);
             DatabaseService.ListenForChildAdded(path,count, ListenAddedCallback);
@@ -291,7 +283,6 @@ namespace Firebase.Database.JS
 
         object ListenForChildChanged(Fuse.Scripting.Context context, object[] args)
         {
-            debug_log "ListenForChildChanged";
             var path = args[0].ToString();
             DatabaseService.ListenForChildChanged(path, ListenChangedCallback);
             return null;
@@ -299,7 +290,6 @@ namespace Firebase.Database.JS
 
         object ListenForChildRemoved(Fuse.Scripting.Context context, object[] args)
         {
-            debug_log "ListenForChildRemoved";
             var path = args[0].ToString();
             DatabaseService.ListenForChildRemoved(path, ListenRemovedCallback);
             return null;
@@ -307,7 +297,6 @@ namespace Firebase.Database.JS
 
         object ListenForChildMoved(Fuse.Scripting.Context context, object[] args)
         {
-            debug_log "ListenForChildMoved";
             var path = args[0].ToString();
             DatabaseService.ListenForChildMoved(path, ListenMovedCallback);
             return null;
@@ -315,7 +304,6 @@ namespace Firebase.Database.JS
 
         object ReadByQueryEndingAtValue(Fuse.Scripting.Context context, object[] args)
         {
-            debug_log "ReadByQueryEndingAtValue";
             var path = args[0].ToString();
             var keyName = args[1].ToString();
             var lastValue = args[2].ToString();
@@ -326,7 +314,6 @@ namespace Firebase.Database.JS
 
         object DetachListeners(Fuse.Scripting.Context context, object[] args)
         {
-            debug_log "DetachListeners";
             var path = args[0].ToString();
             DatabaseService.DetachListeners(path);
             return null;

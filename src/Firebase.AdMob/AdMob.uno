@@ -49,7 +49,6 @@ namespace Firebase.AdMob
             if defined(Android)
             {
                 if (AdUnitId == null) {
-                    debug_log "No AdUnitId";
                     throw new Uno.Exception("Not initialized.");
                 }
                 _native = new AndroidGADBannerView(AdUnitId);
@@ -58,7 +57,6 @@ namespace Firebase.AdMob
             else if defined(iOS)
             {
                 if (AdUnitId == null) {
-                    debug_log "No AdUnitId";
                     throw new Uno.Exception("Not initialized.");
                 }
                 _native = new iOSGADBannerView(AdUnitId);

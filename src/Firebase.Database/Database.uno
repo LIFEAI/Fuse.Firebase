@@ -603,11 +603,9 @@ namespace Firebase.Database
         public static void Init() {}
         public static string NewChildId(string path)
         {
-            debug_log "NewChildId not implemented for desktop";
             return "unknown";
         }
         public static void Save() {
-            debug_log "Save not implemented for desktop";
         }
         public static void Save(string path, string[] keys, string[] vals, int len)
         {
@@ -637,37 +635,37 @@ namespace Firebase.Database
 
         public static void Listen(string path, Action<string,string> f)
         {
-            debug_log "Listen not implemented for desktop";
+
         }
 
         public static void ReadByQueryEndingAtValue(string path, string keyName, string lastValue, int count, Action<string,string> f)
         {
-            debug_log "ReadByQueryEndingAtValue not implemented for desktop";
+
         }
 
         public static void ListenForChildAdded(string path, int count, Action<string,string> f)
         {
-            debug_log "ListenForChildAdded not implemented for desktop";
+
         }
 
         public static void ListenForChildChanged(string path, Action<string,string> f)
         {
-            debug_log "ListenForChildChanged not implemented for desktop";
+
         }
 
         public static void ListenForChildRemoved(string path, Action<string,string> f)
         {
-            debug_log "ListenForChildRemoved not implemented for desktop";
+
         }
 
         public static void ListenForChildMoved(string path, Action<string,string> f)
         {
-            debug_log "ListenForChildMoved not implemented for desktop";
+
         }
 
         public static void DetachListeners(string path)
         {
-            debug_log "DetachListeners not implemented for desktop";
+
         }
     }
 

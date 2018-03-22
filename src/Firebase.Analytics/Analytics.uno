@@ -66,8 +66,6 @@ namespace Firebase.Analytics
     internal static class AnalyticsService
     {
         public static void Init() {}
-        public static void LogEvent(string name, string[] keys, string[] vals, int len) {
-            debug_log "LogEvent: " + name;
-        }
+        public static void LogEvent(string name, string[] keys, string[] vals, int len) { }
     }
 }
