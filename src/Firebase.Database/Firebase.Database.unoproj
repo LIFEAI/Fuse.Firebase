@@ -8,6 +8,7 @@
     "FuseJS"
   ],
   "Includes": [
-    "*"
+    "*",
+    "FirebaseQueryObject.java:Java:Android",
   ]
 }
