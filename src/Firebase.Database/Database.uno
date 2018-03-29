@@ -24,7 +24,8 @@ namespace Firebase.Database
         "android.util.Log",
         "org.json.JSONObject",
         "java.util.Map",
-        "java.util.HashMap")]
+        "java.util.HashMap",
+        "java.util.ArrayList")]
     [Require("Cocoapods.Podfile.Target", "pod 'Firebase/Database'")]
     [Require("Gradle.Dependency.Compile", "com.google.firebase:firebase-database:9.2.0")]
     [extern(iOS) Require("Source.Import","FirebaseDatabase/FIRDatabase.h")]
@@ -34,6 +35,10 @@ namespace Firebase.Database
         static bool _initialized;
         extern(android) static Java.Object _handle;
         extern(ios) public static ObjC.Object _handle;
+        extern(android) static Java.Object _valueListenerMap;  // For storing ChildEventListener
+        extern(android) static Java.Object _childListenerMap;  // For storing ValueEventListener
+        extern(android) static Java.Object _queryListenerArray;  // For storing Query EventListener
+
 
         public static void Init()
         {
@@ -60,6 +65,11 @@ namespace Firebase.Database
         public static void AndroidInit()
         @{
             @{_handle:Set(FirebaseDatabase.getInstance().getReference())};
+
+            // Initialize variables
+            @{_childListenerMap:Set(new HashMap<String, ChildEventListener>())};
+            @{_valueListenerMap:Set(new HashMap<String, ValueEventListener>())};
+            @{_queryListenerArray:Set(new ArrayList<FirebaseQueryObject>())};
         @}
 
         [Foreign(Language.ObjC)]
@@ -127,6 +137,11 @@ namespace Firebase.Database
             DatabaseReference ref = (DatabaseReference)@{DatabaseService._handle:Get()};
             Query lastAddedQuery = ref.child(path).limitToLast(count);
             lastAddedQuery.addChildEventListener(childEventListener);
+
+            @SuppressWarnings("unchecked") // For removing cast check warnings
+            ArrayList<FirebaseQueryObject> queryListenerArray =  (ArrayList<FirebaseQueryObject>)@{DatabaseService._queryListenerArray:Get()};
+            FirebaseQueryObject firebaseQueryObject = new FirebaseQueryObject(path, lastAddedQuery, childEventListener);
+            queryListenerArray.add(firebaseQueryObject); // Add firebaseQueryObject to query array
         @}
 
         [Foreign(Language.ObjC)]
@@ -184,6 +199,11 @@ namespace Firebase.Database
             DatabaseReference ref = (DatabaseReference)@{DatabaseService._handle:Get()};
             Query readQuery = ref.child(path).orderByChild(keyName).endAt(longLastValue).limitToLast(count);
             readQuery.addValueEventListener(dataListener);
+
+            @SuppressWarnings("unchecked")
+            ArrayList<FirebaseQueryObject> queryListenerArray =  (ArrayList<FirebaseQueryObject>)@{DatabaseService._queryListenerArray:Get()};
+            FirebaseQueryObject firebaseQueryObject = new FirebaseQueryObject(path, readQuery, dataListener);
+            queryListenerArray.add(firebaseQueryObject);
         @}
 
         [Foreign(Language.ObjC)]
@@ -249,6 +269,9 @@ namespace Firebase.Database
             };
             DatabaseReference ref = (DatabaseReference)@{DatabaseService._handle:Get()};
             ref.child(path).addChildEventListener(childEventListener);
+            @SuppressWarnings("unchecked")
+            HashMap<String, ChildEventListener> mListenerMap = (HashMap<String, ChildEventListener>)@{DatabaseService._childListenerMap:Get()};
+            mListenerMap.put(path, childEventListener); // Add to Child event listener map
         @}
 
         [Foreign(Language.ObjC)]
@@ -314,6 +337,9 @@ namespace Firebase.Database
             };
             DatabaseReference ref = (DatabaseReference)@{DatabaseService._handle:Get()};
             ref.child(path).addChildEventListener(childEventListener);
+            @SuppressWarnings("unchecked")
+            HashMap<String, ChildEventListener> mListenerMap = (HashMap<String, ChildEventListener>)@{DatabaseService._childListenerMap:Get()};
+            mListenerMap.put(path, childEventListener);
         @}
 
         [Foreign(Language.ObjC)]
@@ -379,6 +405,9 @@ namespace Firebase.Database
             };
             DatabaseReference ref = (DatabaseReference)@{DatabaseService._handle:Get()};
             ref.child(path).addChildEventListener(childEventListener);
+            @SuppressWarnings("unchecked")
+            HashMap<String, ChildEventListener> mListenerMap = (HashMap<String, ChildEventListener>)@{DatabaseService._childListenerMap:Get()};
+            mListenerMap.put(path, childEventListener);
         @}
 
         [Foreign(Language.ObjC)]
@@ -393,7 +422,44 @@ namespace Firebase.Database
         extern(Android)
         public static void DetachListeners(string path)
         @{
+            DatabaseReference ref = (DatabaseReference)@{DatabaseService._handle:Get()};
 
+            // Remove ChildEventListener if any set with this path
+            @SuppressWarnings("unchecked")
+            HashMap<String, ChildEventListener> childListenerMap = (HashMap<String, ChildEventListener>)@{DatabaseService._childListenerMap:Get()};
+            for (Map.Entry<String, ChildEventListener> entry : childListenerMap.entrySet()) {
+                String pathString = entry.getKey();
+                if (pathString.equals(path)) { // Check for path name
+                    ChildEventListener listener = entry.getValue();
+                    ref.child(path).removeEventListener(listener);
+                    childListenerMap.remove(entry);
+                }
+            }
+
+            // Remove ValueEventListener if any set with this path
+            @SuppressWarnings("unchecked")
+            HashMap<String, ValueEventListener> valueListenerMap = (HashMap<String, ValueEventListener>)@{DatabaseService._valueListenerMap:Get()};
+            for (Map.Entry<String, ValueEventListener> entry : valueListenerMap.entrySet()) {
+                String pathString = entry.getKey();
+                if (pathString.equals(path)) {
+                    ValueEventListener listener = entry.getValue();
+                    ref.child(path).removeEventListener(listener);
+                    valueListenerMap.remove(entry);
+                }
+            }
+
+            // Remove Query ValueEventListener if any set with this path
+            @SuppressWarnings("unchecked")
+            ArrayList<FirebaseQueryObject> queryListenerArray = (ArrayList<FirebaseQueryObject>)@{DatabaseService._queryListenerArray:Get()};
+            for (FirebaseQueryObject firebaseQueryObject : queryListenerArray) {
+                if (firebaseQueryObject.getPath().equals(path)) {
+                    if (firebaseQueryObject.getChildEventListener() != null)
+                        firebaseQueryObject.getQuery().removeEventListener(firebaseQueryObject.getChildEventListener());
+
+                    if (firebaseQueryObject.getValueEventListener() != null)
+                        firebaseQueryObject.getQuery().removeEventListener(firebaseQueryObject.getValueEventListener());
+                }
+            }
         @}
 
         [Foreign(Language.ObjC)]
@@ -443,6 +509,9 @@ namespace Firebase.Database
             };
             DatabaseReference ref = (DatabaseReference)@{DatabaseService._handle:Get()};
             ref.child(path).addValueEventListener(dataListener);
+            @SuppressWarnings("unchecked")
+            HashMap<String, ValueEventListener> mListenerMap = (HashMap<String, ValueEventListener>)@{DatabaseService._valueListenerMap:Get()};
+            mListenerMap.put(path, dataListener); // Add to Value event listener Map
         @}
 
 
@@ -759,6 +828,7 @@ namespace Firebase.Database
         "org.json.JSONObject",
         "org.json.JSONArray",
         "java.util.Map",
+        "java.util.HashMap",
         "java.util.List")]
     extern(Android)
     internal class Read : Promise<string>
@@ -792,6 +862,9 @@ namespace Firebase.Database
             };
             DatabaseReference ref = (DatabaseReference)@{DatabaseService._handle:Get()};
             ref.child(path).addListenerForSingleValueEvent(dataListener);
+            @SuppressWarnings("unchecked")
+            HashMap<String, ValueEventListener> mListenerMap = (HashMap<String, ValueEventListener>)@{DatabaseService._valueListenerMap:Get()};
+            mListenerMap.put(path, dataListener);
         @}
         void Reject(string reason) { Reject(new Exception(reason)); }
     }
