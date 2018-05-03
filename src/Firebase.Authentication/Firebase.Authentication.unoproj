@@ -12,7 +12,8 @@
     "Firebase.Authentication.Google",
     "Firebase.Authentication.Facebook",
     "Firebase.Authentication.Twitter",
-    "Firebase.Authentication.Github"
+    "Firebase.Authentication.Github",
+    "Firebase.Authentication.Phone"
   ],
   "Includes": [
     "*"
