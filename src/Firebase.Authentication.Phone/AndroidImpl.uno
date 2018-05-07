@@ -95,7 +95,7 @@ namespace Firebase.Authentication.Phone
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("authVerificationID", verificationId);
                 editor.apply();
-                @{CreateUser:Of(_this).Resolve(string):Call("Code sent")};
+                @{Firebase.Authentication.Phone.JS.PhoneModule.CodeSent(string):Call("Code sent")};
             }
         };
 

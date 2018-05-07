@@ -16,8 +16,8 @@ namespace Firebase.Authentication.Phone.JS
     [UXGlobalModule]
     public sealed class PhoneModule : NativeModule
     {
-        // static NativeEvent _onReceivedMessage;
         static readonly PhoneModule _instance;
+        static NativeEvent _onCodeSent;
 
         public PhoneModule()
         {
@@ -25,10 +25,11 @@ namespace Firebase.Authentication.Phone.JS
             Uno.UX.Resource.SetGlobalKey(_instance = this, "Firebase/Authentication/Phone");
 
             Firebase.Authentication.Phone.PhoneService.Init();
+            _onCodeSent = new NativeEvent("onCodeSentEvent");
+            AddMember(_onCodeSent);
 
             AddMember(new NativePromise<string, string>("createUserWithPhoneNumber", CreateUserWithPhoneNumber));
             AddMember(new NativePromise<string, string>("validateUserWithCode", ValidateUserWithCode));
-            // AddMember(new NativePromise<string, string>("updatePassword", UpdatePassword));
         }
 
         Future<string> CreateUserWithPhoneNumber(object[] args)
@@ -41,6 +42,11 @@ namespace Firebase.Authentication.Phone.JS
         {
             var code = (string)args[0];
             return new Firebase.Authentication.Phone.ValidateUser(code);
+        }
+
+        static void CodeSent(string token)
+        {
+            _onCodeSent.RaiseAsync(_onCodeSent.ThreadWorker, token);
         }
 
     }
