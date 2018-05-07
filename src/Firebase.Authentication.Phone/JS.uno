@@ -30,6 +30,7 @@ namespace Firebase.Authentication.Phone.JS
 
             AddMember(new NativePromise<string, string>("createUserWithPhoneNumber", CreateUserWithPhoneNumber));
             AddMember(new NativePromise<string, string>("validateUserWithCode", ValidateUserWithCode));
+            AddMember(new NativePromise<string, string>("resendCodeValidation", ResendCodeValidation));
         }
 
         Future<string> CreateUserWithPhoneNumber(object[] args)
@@ -42,6 +43,19 @@ namespace Firebase.Authentication.Phone.JS
         {
             var code = (string)args[0];
             return new Firebase.Authentication.Phone.ValidateUser(code);
+        }
+
+        Future<string> ResendCodeValidation(object[] args)
+        {
+            var phone = (string)args[0];
+            if defined(Android)
+            {
+                return new Firebase.Authentication.Phone.ResendCodeValidation(phone);
+            } else if defined(iOS) {
+                return new Firebase.Authentication.Phone.CreateUser(phone);
+            } else {
+                return null;
+            }
         }
 
         static void CodeSent(string token)
