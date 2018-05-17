@@ -30,6 +30,7 @@ namespace Firebase.Authentication.Facebook.JS
              _onError = new NativeEvent("onFailed");
             AddMember(_onError);
             AddMember(new NativeFunction("doFacebookLogin", (NativeCallback)DoFacebookLogin));
+            AddMember(new NativeFunction("linkFacebook", (NativeCallback)LinkFacebook));
             Firebase.Authentication.Facebook.FacebookService.Init();
         }
 
@@ -54,6 +55,17 @@ namespace Firebase.Authentication.Facebook.JS
             else{ }
             return null;
         }
+
+        object LinkFacebook(Context context, object[] args)
+        {
+            if defined(iOS || Android)
+            {
+                _facebookAuthentication.LinkFacebook();
+            }
+            else{ }
+            return null;
+        }
+
     }
 
 }

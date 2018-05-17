@@ -158,5 +158,115 @@ namespace Firebase.Authentication.Facebook.JS
                 }];
         @}
 
+
+        [Foreign(Language.ObjC)]
+        public extern(iOS) void LinkFacebook()
+        @{
+            FBSDKLoginManager* login = [[FBSDKLoginManager alloc] init];
+            [login
+                logInWithReadPermissions: @[@"public_profile"]
+                fromViewController: [[[UIApplication sharedApplication] keyWindow] rootViewController]
+                handler: ^(FBSDKLoginManagerLoginResult* result, NSError* error)
+                {
+                    if (error)
+                    {
+                        NSString * message = @"Facebook SignIn Failed. Error code: ";
+                        NSString *errorMessage = [NSString stringWithFormat:@"%@ %ld", message, error.code];
+                        @{OnFailure(string):Call(errorMessage)};
+                        @{Firebase.Authentication.Facebook.JS.FacebookModule.OnFailed(string):Call(errorMessage)};
+                        return;
+                    }
+                    if (result.isCancelled)
+                    {
+                        NSString *error = @"Facebook Auth Stage Cancelled";
+                        @{OnFailure(string):Call(error)};
+                        @{Firebase.Authentication.Facebook.JS.FacebookModule.OnFailed(string):Call(error)};
+                        return;
+                    }
+                    @{OnLinkFacebookWithFirebase(ObjC.Object):Call(result)};
+                }
+            ];
+        @}
+
+        [Foreign(Language.Java)]
+        public extern(Android) void LinkFacebook()
+        @{
+            FacebookSdk.sdkInitialize(Activity.getRootActivity());
+            final CallbackManager callbackManager = CallbackManager.Factory.create();
+            @{FacebookAuthentication:Of(_this)._callbackManager:Set(callbackManager)};
+            Activity.subscribeToResults(new Activity.ResultListener() {
+                @Override
+                    public boolean onResult(int requestCode, int resultCode, Intent data) {
+                        return callbackManager.onActivityResult(requestCode, resultCode, data);
+                    }
+            });
+            CallbackManager callbackManagerFrom = (CallbackManager)@{FacebookAuthentication:Of(_this)._callbackManager:Get()};
+            LoginManager.getInstance().registerCallback(callbackManagerFrom,
+                new FacebookCallback<LoginResult>()
+                {
+                    public void onSuccess(LoginResult loginResult) {
+                        @{OnLinkFacebookWithFirebase(Java.Object):Call(loginResult.getAccessToken())};
+                    }
+
+                    public void onCancel() {
+                        @{OnFailure(string):Call("Facebook Auth Stage Cancelled")};
+                        @{Firebase.Authentication.Facebook.JS.FacebookModule.OnFailed(string):Call("Facebook Auth Stage Cancelled")};
+                    }
+
+                    public void onError(FacebookException error) {
+                        String reason = "Facebook Auth Stage Errored (" + error.getClass().getName() + "):\n" + error.getMessage();
+                        @{OnFailure(string):Call(reason)};
+                        @{Firebase.Authentication.Facebook.JS.FacebookModule.OnFailed(string):Call(reason)};
+                    }
+                }
+            );
+            LoginManager.getInstance().logInWithReadPermissions(Activity.getRootActivity(), java.util.Arrays.asList("public_profile"));
+        @}
+
+
+        [Foreign(Language.ObjC)]
+        static extern(iOS) void OnLinkFacebookWithFirebase(ObjC.Object result)
+        @{
+            FBSDKLoginManagerLoginResult *accessToken = (FBSDKLoginManagerLoginResult *)result;
+            NSString *tokenStr = accessToken.token.tokenString;
+
+            if (tokenStr==NULL)
+            {
+                @{OnFailure(string):Call(@"Authentication against Firebase failed")};
+                return;
+            }
+
+            FIRAuthCredential *credential = [FIRFacebookAuthProvider credentialWithAccessToken:tokenStr];
+
+            [[FIRAuth auth].currentUser linkAndRetrieveDataWithCredential:credential
+            completion:^(FIRAuthDataResult *result, NSError *_Nullable error) {
+                if (error)
+                    @{OnFailure(string):Call(@"Authentication against Firebase failed")};
+                else {
+                    @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(tokenStr)};
+                    @{OnSuccess(string):Call(@"success")};
+                }
+            }];
+        @}
+
+        [Foreign(Language.Java)]
+        static extern(Android) void OnLinkFacebookWithFirebase(Java.Object result)
+        @{
+            final AccessToken token = (AccessToken)result;
+            AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+            FirebaseAuth.getInstance().getCurrentUser().linkWithCredential(credential)
+                    .addOnCompleteListener(com.fuse.Activity.getRootActivity(), new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(token.getToken())};
+                                @{OnSuccess(string):Call("Success")};
+                            } else {
+                                @{OnFailure(string):Call("Authentication against Firebase failed")};
+                            }
+                        }
+                    });
+        @}
+
     }
 }
