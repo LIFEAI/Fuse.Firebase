@@ -1,0 +1,7 @@
+<Extensions Backend="CPlusPlus" Condition="iOS">
+
+    <Require AppDelegate.SourceFile.OpenURL><![CDATA[
+        [[FIRAuth auth] canHandleURL:url]
+  ]]></Require>
+
+</Extensions>

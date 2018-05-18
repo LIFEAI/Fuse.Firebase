@@ -12,7 +12,7 @@ using Uno.Threading;
 namespace Firebase.Authentication
 {
     // this enum is a shame but we want to talk about the backend even when it isnt included
-    public enum AuthProviderName { None, Email, Facebook, Google }
+    public enum AuthProviderName { None, Email, Facebook, Google, Phone }
 
     [ForeignInclude(Language.Java, "java.util.ArrayList", "java.util.List", "android.graphics.Color",
                     "com.google.android.gms.tasks.OnCompleteListener",
@@ -20,7 +20,7 @@ namespace Firebase.Authentication
                     "com.google.firebase.auth.AuthResult",
                     "com.google.firebase.auth.FirebaseAuth",
                     "com.google.firebase.auth.FirebaseUser")]
-    [Require("Gradle.Dependency.Compile", "com.google.firebase:firebase-auth:9.2.0")]
+    [Require("Gradle.Dependency.Compile", "com.google.firebase:firebase-auth:11.8.0")]
     [Require("AppDelegate.SourceFile.Declaration", "#include <@{Firebase.Authentication.AuthService:Include}>")]
     [extern(iOS) Require("Source.Include", "Firebase/Firebase.h")]
     [extern(iOS) Require("Source.Include", "FirebaseAuth/FirebaseAuth.h")]

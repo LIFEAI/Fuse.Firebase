@@ -65,7 +65,7 @@ namespace Firebase.Authentication
         public GetToken()
         @{
             FIRUser* user = [FIRAuth auth].currentUser;
-            [user getTokenWithCompletion: ^(NSString *_Nullable token, NSError *_Nullable error) {
+            [user getIDTokenWithCompletion: ^(NSString *_Nullable token, NSError *_Nullable error) {
                 if (error) {
                     @{GetToken:Of(_this).Reject(string):Call(@"failed getting token for user")};
                 } else {
