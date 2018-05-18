@@ -240,9 +240,14 @@ namespace Firebase.Authentication.Facebook.JS
 
             [[FIRAuth auth].currentUser linkAndRetrieveDataWithCredential:credential
             completion:^(FIRAuthDataResult *result, NSError *_Nullable error) {
-                if (error)
-                    @{OnFailure(string):Call(@"Authentication against Firebase failed")};
-                else {
+                if (error) {
+                    if (error.code == FIRAuthErrorCodeProviderAlreadyLinked) {
+                        @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(tokenStr)};
+                        @{OnSuccess(string):Call(@"success")};
+                    } else {
+                        @{OnFailure(string):Call(@"Authentication against Firebase failed")};
+                    }
+                } else {
                     @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(tokenStr)};
                     @{OnSuccess(string):Call(@"success")};
                 }
@@ -262,11 +267,19 @@ namespace Firebase.Authentication.Facebook.JS
                                 @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(token.getToken())};
                                 @{OnSuccess(string):Call("Success")};
                             } else {
-                                @{OnFailure(string):Call("Authentication against Firebase failed")};
+                                if (task.getException() != null) {
+                                    if (task.getException().getMessage().equals("User has already been linked to the given provider.")) {
+                                        @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(token.getToken())};
+                                        @{OnSuccess(string):Call("Success")};
+                                    } else {
+                                        @{OnFailure(string):Call("Authentication against Firebase failed")};
+                                    }
+                                } else {
+                                    @{OnFailure(string):Call("Authentication against Firebase failed")};
+                                }
                             }
                         }
                     });
         @}
-
     }
 }
