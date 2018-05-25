@@ -245,7 +245,8 @@ namespace Firebase.Authentication.Facebook.JS
                         @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(tokenStr)};
                         @{OnSuccess(string):Call(@"success")};
                     } else {
-                        @{OnFailure(string):Call(@"Authentication against Firebase failed")};
+                        @{OnFailure(string):Call(@"Link Firebase failed")};
+                        @{Firebase.Authentication.Facebook.JS.FacebookModule.OnFailed(string):Call(error.localizedDescription)};
                     }
                 } else {
                     @{Firebase.Authentication.Facebook.JS.FacebookModule.Auth(string):Call(tokenStr)};
@@ -273,9 +274,11 @@ namespace Firebase.Authentication.Facebook.JS
                                         @{OnSuccess(string):Call("Success")};
                                     } else {
                                         @{OnFailure(string):Call("Authentication against Firebase failed")};
+                                        @{Firebase.Authentication.Facebook.JS.FacebookModule.OnFailed(string):Call(task.getException().getMessage())};
                                     }
                                 } else {
                                     @{OnFailure(string):Call("Authentication against Firebase failed")};
+                                    @{Firebase.Authentication.Facebook.JS.FacebookModule.OnFailed(string):Call("Link Firebase failed")};
                                 }
                             }
                         }
