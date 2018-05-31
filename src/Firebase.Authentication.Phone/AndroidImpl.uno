@@ -164,7 +164,7 @@ namespace Firebase.Authentication.Phone
                         if (task.isSuccessful())
                             @{ValidateUser:Of(_this).Resolve(string):Call(task.getResult().getUser().getIdToken(false).getResult().getToken())};
                         else
-                            @{ValidateUser:Of(_this).Reject(string):Call("Firebase failed to create user")};
+                            @{ValidateUser:Of(_this).Reject(string):Call(task.getException().getLocalizedMessage())};
                     }
                 });
         @}
@@ -178,7 +178,7 @@ namespace Firebase.Authentication.Phone
         void Reject(string reason)
         {
             AuthService.SignalError(-1, reason);
-                        Reject(new Exception(reason));
+            Reject(new Exception(reason));
         }
 
     }

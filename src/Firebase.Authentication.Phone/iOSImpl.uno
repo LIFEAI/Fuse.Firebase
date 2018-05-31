@@ -98,6 +98,7 @@ namespace Firebase.Authentication.Phone
         void Reject(string reason)
         {
             AuthService.SignalError(-1, reason);
+            Reject(new Exception(reason));
         }
     }
 
