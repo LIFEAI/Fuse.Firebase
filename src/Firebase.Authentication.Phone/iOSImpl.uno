@@ -28,8 +28,12 @@ namespace Firebase.Authentication.Phone
             UIDelegate:nil
             completion:^(NSString * _Nullable verificationID, NSError * _Nullable error) {
                 if (error) {
-                    NSLog(@"%@", error.localizedDescription);
-                    @{CreateUser:Of(_this).Reject(string):Call(error.localizedDescription)};
+                    if (error.code == FIRAuthErrorCodeInvalidPhoneNumber) {
+                        @{CreateUser:Of(_this).Reject(string):Call(@"The country code or mobile number may be incorrect")};
+                    }else {
+                        NSLog(@"%@", error.localizedDescription);
+                        @{CreateUser:Of(_this).Reject(string):Call(error.localizedDescription)};
+                    }
                 }
                 else {
                 // Sign in using the verificationID and the code sent to the user

@@ -74,6 +74,8 @@ namespace Firebase.Authentication.Phone
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                     // ...
+                    @{CreateUser:Of(_this).Reject(string):Call("The country code or mobile number may be incorrect")};
+                    return;
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                     // ...
@@ -243,6 +245,8 @@ namespace Firebase.Authentication.Phone
                 if (e instanceof FirebaseAuthInvalidCredentialsException) {
                     // Invalid request
                     // ...
+                    @{CreateUser:Of(_this).Reject(string):Call("The country code or mobile number may be incorrect")};
+                    return;
                 } else if (e instanceof FirebaseTooManyRequestsException) {
                     // The SMS quota for the project has been exceeded
                     // ...
