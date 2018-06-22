@@ -85,9 +85,9 @@ namespace Firebase.Authentication.Email
                                 @{SignInUser:Of(_this).Resolve(string):Call("success")};
                             else {
                                 try {
-                                    @{CreateUser:Of(_this).Reject(string):Call(task.getException().getLocalizedMessage())};
+                                    @{SignInUser:Of(_this).Reject(string):Call(task.getException().getLocalizedMessage())};
                                 } catch (Exception e) {
-                                     @{CreateUser:Of(_this).Reject(string):Call("Firebase failed to signin user")};
+                                    @{SignInUser:Of(_this).Reject(string):Call("Firebase failed to signin user")};
                                 }
                             }
                         }
