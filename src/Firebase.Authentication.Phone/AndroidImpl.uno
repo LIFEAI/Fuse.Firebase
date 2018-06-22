@@ -60,7 +60,7 @@ namespace Firebase.Authentication.Phone
                         }
                         else {
                             Log.d("Log ", " " + task.getException().toString());
-                            @{CreateUser:Of(_this).Reject(string):Call(task.getException().toString())};
+                            @{CreateUser:Of(_this).Reject(string):Call(task.getException().getLocalizedMessage())};
                         }
                     }});
             }
@@ -231,7 +231,7 @@ namespace Firebase.Authentication.Phone
                         }
                         else {
                             Log.d("Log ", " " + task.getException().toString());
-                            @{ResendCodeValidation:Of(_this).Reject(string):Call(task.getException().toString())};
+                            @{ResendCodeValidation:Of(_this).Reject(string):Call(task.getException().getLocalizedMessage())};
                         }
                     }});
             }
