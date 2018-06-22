@@ -36,8 +36,13 @@ namespace Firebase.Authentication.Email
                     {
                         if (task.isSuccessful())
                             @{CreateUser:Of(_this).Resolve(string):Call("success")};
-                        else
-                            @{CreateUser:Of(_this).Reject(string):Call("Firebase failed to create user")};
+                        else {
+                            try {
+                                @{CreateUser:Of(_this).Reject(string):Call(task.getException().getLocalizedMessage())};
+                            } catch (Exception e) {
+                                 @{CreateUser:Of(_this).Reject(string):Call("Firebase failed to create user")};
+                            }
+                        }
                     }
                 });
         @}
@@ -76,10 +81,15 @@ namespace Firebase.Authentication.Email
                 .addOnCompleteListener(com.fuse.Activity.getRootActivity(), new OnCompleteListener<AuthResult>() {
                         public void onComplete(Task<AuthResult> task)
                         {
-                        if (task.isSuccessful())
-                            @{SignInUser:Of(_this).Resolve(string):Call("success")};
-                        else
-                            @{SignInUser:Of(_this).Reject(string):Call("Firebase failed to signin user")};
+                            if (task.isSuccessful())
+                                @{SignInUser:Of(_this).Resolve(string):Call("success")};
+                            else {
+                                try {
+                                    @{CreateUser:Of(_this).Reject(string):Call(task.getException().getLocalizedMessage())};
+                                } catch (Exception e) {
+                                     @{CreateUser:Of(_this).Reject(string):Call("Firebase failed to signin user")};
+                                }
+                            }
                         }
                     });
         @}
